@@ -34,6 +34,13 @@
   transition: 0.3s;
 }
 
+.container {
+  display: inline-flex;
+  align-items: center; 
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 5px;
+ }
+
 .sidenav a:hover {
   color: red;
 }
@@ -69,6 +76,9 @@
   </div>
   <div id="main" class="main">
     <body style="background-color:black;">
-        <p>WIP</p>
+        <div id="discord" class="container">
+          <img src = "Assets/discord.png" alt = "Discord" width="75px" height="75px">
+          <p>kreisburger</p>
+        </div>
   </div>
 </html>
