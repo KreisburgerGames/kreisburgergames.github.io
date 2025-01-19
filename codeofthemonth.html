@@ -71,6 +71,54 @@
   </div>
   <div id="main" class="main">
     <body style="background-color:black;">
-      <p>WIP</p>
+      <p>Kinda proud of this 2D player movement</p>
+      <br>
+      <p style="white-space: pre;">
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    public float acceleration;
+    public float speed;
+    public float frictionCoefficient;
+    private Rigidbody2D rb;
+    private Vector2 input;
+    private Vector2 boundingMin, boundingMax;
+    private Vector2 spriteMargin;
+    private SpriteRenderer spriteRenderer;
+    public float edgeBouncebackForce;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteMargin = new Vector2(spriteRenderer.bounds.size.x / 2, spriteRenderer.bounds.size.y / 2);
+        boundingMin = Camera.main.ScreenToWorldPoint(Vector2.zero);
+        boundingMax = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        boundingMin.x += spriteMargin.x;
+        boundingMin.y += spriteMargin.y;
+        boundingMax.x -= spriteMargin.x;
+        boundingMax.y -= spriteMargin.y;
+    }
+
+    void Update()
+    {
+        input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        if(transform.position.x == boundingMin.x || transform.position.x == boundingMax.x) rb.AddForce(Vector2.right * -rb.velocity.x * edgeBouncebackForce, ForceMode2D.Impulse);
+        if(transform.position.y == boundingMin.y || transform.position.y == boundingMax.y) rb.AddForce(Vector2.up * -rb.velocity.y * edgeBouncebackForce, ForceMode2D.Impulse);
+        transform.position = new Vector2(Mathf.Clamp(transform.position.x, boundingMin.x, boundingMax.x), Mathf.Clamp(transform.position.y, boundingMin.y, boundingMax.y));
+    }
+
+    void FixedUpdate()
+    {
+        rb.AddForce(input * acceleration, ForceMode2D.Force);
+        rb.velocity = Vector2.ClampMagnitude(rb.velocity, speed);
+        rb.AddForce(-rb.velocity * frictionCoefficient, ForceMode2D.Impulse);
+    }
+}
+
+      </p>
   </div>
 </html>
